@@ -26,8 +26,8 @@ const Pagination: React.FC<PaginationProps> = ({
           <li
             key={number}
             style={{
-              ...pageItemStyle,
-              fontWeight: number === currentPage ? 'bold' : 'normal',
+            ...pageItemStyle,
+            fontWeight: number === currentPage ? 'bold' : 'normal',
             }}
             onClick={() => setCurrentPage(number)}
           >

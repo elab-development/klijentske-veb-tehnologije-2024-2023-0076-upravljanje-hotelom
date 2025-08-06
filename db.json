@@ -1,43 +1,43 @@
 {
-  "rooms": [
-    {
-      "id": 1,
-      "name": "Standard soba",
-      "price": 50,
-      "guests": 2,
-      "description": "Udobna standard soba za dva gosta",
-      "imageUrl": "/images/standard-room.jpg"
-    },
-    {
-      "id": 2,
-      "name": "Porodična soba",
-      "price": 80,
-      "guests": 4,
-      "description": "Prostrana soba za celu porodicu",
-      "imageUrl": "/images/family-room.jpg"
-    },
-    {
-      "id": 3,
-      "name": "Mala soba",
-      "price": 30,
-      "guests": 1,
-      "description": "Mala soba za jednu osobu",
-      "imageUrl": "/images/small-room.jpg"
-    },
-    {
-      "id": 4,
-      "name": "Luksuzna soba",
-      "price": 100,
-      "guests": 4,
-      "description": "Luksuzna soba za do 4 osobe",
-      "imageUrl": "/images/luxury-room.jpg"
-    }
-  ],
-  "reviews": [
-    { "id": 1, "roomId": 1, "author": "Marko", "rating": 5, "comment": "Fenomenalna soba, čist i udoban smeštaj!", "date": "2025-08-01" },
-    { "id": 2, "roomId": 1, "author": "Jelena", "rating": 4, "comment": "Soba je bila udobna, ali buka spolja je malo smetala.", "date": "2025-07-25" },
-    { "id": 3, "roomId": 2, "author": "Ivan", "rating": 5, "comment": "Porodična soba je bila prostrana i savršena za naš odmor.", "date": "2025-07-30" },
-    { "id": 4, "roomId": 4, "author": "Petar", "rating": 5, "comment": "Veoma lepa soba, luksuzna i prostrana", "date": "2025-06-20" },
-    { "id": 5, "roomId": 3, "author": "Uros", "rating": 3, "comment": "Mala soba, kolko para tolko muzike", "date": "2025-06-30" }
-  ]
+    "rooms": [
+        {
+            "id": 1,
+            "name": "Standard soba",
+            "price": 50,
+            "guests": 2,
+            "description": "Udobna standard soba za dva gosta",
+            "imageUrl": "/images/standard-room.jpg"
+        },
+        {
+            "id": 2,
+            "name": "Porodična soba",
+            "price": 80,
+            "guests": 4,
+            "description": "Prostrana soba za celu porodicu",
+            "imageUrl": "/images/family-room.jpg"
+        },
+        {
+            "id": 3,
+            "name": "Mala soba",
+            "price": 30,
+            "guests": 1,
+            "description": "Mala soba za jednu osobu",
+            "imageUrl": "/images/small-room.jpg"
+        },
+        {
+            "id": 4,
+            "name": "Luksuzna soba",
+            "price": 100,
+            "guests": 4,
+            "description": "Luksuzna soba za do 4 osobe",
+            "imageUrl": "/images/luxury-room.jpg"
+        }
+    ],
+    "reviews": [
+        { "id": 1, "roomId": 1, "author": "Marko", "rating": 5, "comment": "Fenomenalna soba, čist i udoban smeštaj!", "date": "2025-08-01" },
+        { "id": 2, "roomId": 1, "author": "Jelena", "rating": 4, "comment": "Soba je bila udobna, ali buka spolja je malo smetala.", "date": "2025-07-25" },
+        { "id": 3, "roomId": 2, "author": "Ivan", "rating": 5, "comment": "Porodična soba je bila prostrana i savršena za naš odmor.", "date": "2025-07-30" },
+        { "id": 4, "roomId": 4, "author": "Petar", "rating": 5, "comment": "Veoma lepa soba, luksuzna i prostrana", "date": "2025-06-20" },
+        { "id": 5, "roomId": 3, "author": "Uros", "rating": 3, "comment": "Mala soba, kolko para tolko muzike", "date": "2025-06-30" }
+    ]
 }

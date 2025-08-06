@@ -8,7 +8,6 @@ interface FiltersProps {
 }
 
 const Filters: React.FC<FiltersProps> = ({ setGuestFilter, setMaxPriceFilter }) => {
-
   return (
     <div style={filterContainerStyle}>
       <label>
