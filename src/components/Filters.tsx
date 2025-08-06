@@ -1,27 +1,22 @@
-import React, { useState } from 'react';
+import React from 'react';
 import type { Room } from '../models/Room';
 
 interface FiltersProps {
   rooms: Room[];
-  setFilteredRooms: React.Dispatch<React.SetStateAction<Room[]>>;
+  setGuestFilter: React.Dispatch<React.SetStateAction<number | null>>;
+  setMaxPriceFilter: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
-const Filters: React.FC<FiltersProps> = ({ rooms, setFilteredRooms }) => {
-  const [guestFilter, setGuestFilter] = useState<number | ''>('');
-  const [maxPriceFilter, setMaxPriceFilter] = useState<number | ''>('');
+const Filters: React.FC<FiltersProps> = ({ rooms, setGuestFilter, setMaxPriceFilter }) => {
+  
+  const handleGuestChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setGuestFilter(value === '' ? null : Number(value));
+  };
 
-  const handleFilter = () => {
-    let filtered = rooms;
-
-    if (guestFilter !== '') {
-      filtered = filtered.filter(room => room.guests >= Number(guestFilter));
-    }
-
-    if (maxPriceFilter !== '') {
-      filtered = filtered.filter(room => room.price <= Number(maxPriceFilter));
-    }
-
-    setFilteredRooms(filtered);
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setMaxPriceFilter(value === '' ? null : Number(value));
   };
 
   return (
@@ -31,8 +26,8 @@ const Filters: React.FC<FiltersProps> = ({ rooms, setFilteredRooms }) => {
         <input
           type="number"
           min="1"
-          value={guestFilter}
-          onChange={(e) => setGuestFilter(e.target.value === '' ? '' : Number(e.target.value))}
+          onChange={handleGuestChange}
+          placeholder="npr. 2"
         />
       </label>
       <label>
@@ -40,11 +35,10 @@ const Filters: React.FC<FiltersProps> = ({ rooms, setFilteredRooms }) => {
         <input
           type="number"
           min="0"
-          value={maxPriceFilter}
-          onChange={(e) => setMaxPriceFilter(e.target.value === '' ? '' : Number(e.target.value))}
+          onChange={handlePriceChange}
+          placeholder="npr. 100"
         />
       </label>
-      <button onClick={handleFilter}>Filtriraj</button>
     </div>
   );
 };

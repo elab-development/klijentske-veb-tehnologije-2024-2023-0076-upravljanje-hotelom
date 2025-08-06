@@ -1,4 +1,3 @@
-// src/pages/Rooms.tsx
 import React, { useState, useEffect } from 'react';
 import RoomCard from '../components/RoomCard';
 import Filters from '../components/Filters';
@@ -47,6 +46,24 @@ const Rooms: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const roomsPerPage = 5;
 
+  const [guestFilter, setGuestFilter] = useState<number | null>(null);
+  const [priceFilter, setPriceFilter] = useState<number | null>(null);
+
+  useEffect(() => {
+    let filtered = rooms;
+
+    if (guestFilter !== null) {
+      filtered = filtered.filter(room => room.guests >= guestFilter);
+    }
+
+    if (priceFilter !== null) {
+      filtered = filtered.filter(room => room.price <= priceFilter);
+    }
+
+    setFilteredRooms(filtered);
+    setCurrentPage(1);
+  }, [guestFilter, priceFilter, rooms]);
+
   const indexOfLastRoom = currentPage * roomsPerPage;
   const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
   const currentRooms = filteredRooms.slice(indexOfFirstRoom, indexOfLastRoom);
@@ -54,7 +71,11 @@ const Rooms: React.FC = () => {
   return (
     <div>
       <h1>Lista soba</h1>
-      <Filters rooms={rooms} setFilteredRooms={setFilteredRooms} />
+      <Filters
+        rooms={rooms}
+        setGuestFilter={setGuestFilter}
+        setMaxPriceFilter={setPriceFilter}  {/* Obrati pažnju na naziv */}
+      />
       <div>
         {currentRooms.map(room => (
           <RoomCard key={room.id} room={room} />
