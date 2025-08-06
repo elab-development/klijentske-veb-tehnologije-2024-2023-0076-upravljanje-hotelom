@@ -24,6 +24,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/about" element={<About />} />
             <Route path="/rooms/:id" element={<RoomDetails />} />
+            <Route path="/rooms/:roomId/reserve" element={<Reservation />} />
           </Routes>
         </div>
         <Footer/>

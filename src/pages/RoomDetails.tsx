@@ -48,12 +48,13 @@ const RoomDetails: React.FC = () => {
 
   return (
     <div className="room-details">
-      <button className="back-button" onClick={() => navigate('/rooms')}>← Nazad na sobe</button>
-      <img src={room.imageUrl} alt={room.name} className="details-image" />
-      <h2>{room.name}</h2>
-      <p>{room.description}</p>
-      <p><strong>Max gostiju:</strong> {room.guests}</p>
-      <p><strong>Cena:</strong> ${room.price} po noćenju</p>
+        <button className="back-button" onClick={() => navigate('/rooms')}>← Nazad na sobe</button>
+        <img src={room.imageUrl} alt={room.name} className="details-image" />
+        <h2>{room.name}</h2>
+        <p>{room.description}</p>
+        <p><strong>Max gostiju:</strong> {room.guests}</p>
+        <p><strong>Cena:</strong> ${room.price} po noćenju</p>
+        <button onClick={() => navigate(`/rooms/${room.id}/reserve`)}>Rezerviši</button>
     </div>
   );
 };
