@@ -3,21 +3,11 @@ import type { Room } from '../models/Room';
 
 interface FiltersProps {
   rooms: Room[];
-  setGuestFilter: React.Dispatch<React.SetStateAction<number | null>>;
-  setMaxPriceFilter: React.Dispatch<React.SetStateAction<number | null>>;
+  setGuestFilter: React.Dispatch<React.SetStateAction<number | ''>>;
+  setMaxPriceFilter: React.Dispatch<React.SetStateAction<number | ''>>;
 }
 
-const Filters: React.FC<FiltersProps> = ({ rooms, setGuestFilter, setMaxPriceFilter }) => {
-  
-  const handleGuestChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setGuestFilter(value === '' ? null : Number(value));
-  };
-
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setMaxPriceFilter(value === '' ? null : Number(value));
-  };
+const Filters: React.FC<FiltersProps> = ({ setGuestFilter, setMaxPriceFilter }) => {
 
   return (
     <div style={filterContainerStyle}>
@@ -26,8 +16,7 @@ const Filters: React.FC<FiltersProps> = ({ rooms, setGuestFilter, setMaxPriceFil
         <input
           type="number"
           min="1"
-          onChange={handleGuestChange}
-          placeholder="npr. 2"
+          onChange={(e) => setGuestFilter(e.target.value === '' ? '' : Number(e.target.value))}
         />
       </label>
       <label>
@@ -35,8 +24,7 @@ const Filters: React.FC<FiltersProps> = ({ rooms, setGuestFilter, setMaxPriceFil
         <input
           type="number"
           min="0"
-          onChange={handlePriceChange}
-          placeholder="npr. 100"
+          onChange={(e) => setMaxPriceFilter(e.target.value === '' ? '' : Number(e.target.value))}
         />
       </label>
     </div>

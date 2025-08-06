@@ -5,6 +5,13 @@ import Pagination from '../components/Pagination';
 
 import type { Room } from '../models/Room';
 
+const roomListStyle: React.CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(4, 1fr)',
+  gap: '1.5rem',
+  marginTop: '1rem',
+};
+
 const dummyRooms: Room[] = [
   {
     id: 1,
@@ -41,28 +48,28 @@ const dummyRooms: Room[] = [
 ];
 
 const Rooms: React.FC = () => {
-  const [rooms, setRooms] = useState<Room[]>(dummyRooms);
+  const [rooms] = useState<Room[]>(dummyRooms);
   const [filteredRooms, setFilteredRooms] = useState<Room[]>(dummyRooms);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const roomsPerPage = 5;
 
-  const [guestFilter, setGuestFilter] = useState<number | null>(null);
-  const [priceFilter, setPriceFilter] = useState<number | null>(null);
+  const [guestFilter, setGuestFilter] = useState<number | ''>('');
+  const [maxPriceFilter, setMaxPriceFilter] = useState<number | ''>('');
 
   useEffect(() => {
     let filtered = rooms;
 
-    if (guestFilter !== null) {
+    if (guestFilter !== '') {
       filtered = filtered.filter(room => room.guests >= guestFilter);
     }
 
-    if (priceFilter !== null) {
-      filtered = filtered.filter(room => room.price <= priceFilter);
+    if (maxPriceFilter !== '') {
+      filtered = filtered.filter(room => room.price <= maxPriceFilter);
     }
 
     setFilteredRooms(filtered);
     setCurrentPage(1);
-  }, [guestFilter, priceFilter, rooms]);
+  }, [guestFilter, maxPriceFilter, rooms]);
 
   const indexOfLastRoom = currentPage * roomsPerPage;
   const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
@@ -74,13 +81,13 @@ const Rooms: React.FC = () => {
       <Filters
         rooms={rooms}
         setGuestFilter={setGuestFilter}
-        setMaxPriceFilter={setPriceFilter}  {/* Obrati pažnju na naziv */}
+        setMaxPriceFilter={setMaxPriceFilter}
       />
-      <div>
-        {currentRooms.map(room => (
-          <RoomCard key={room.id} room={room} />
-        ))}
-      </div>
+      <div style={roomListStyle}>
+  {currentRooms.map(room => (
+    <RoomCard key={room.id} room={room} />
+  ))}
+</div>
       <Pagination
         totalRooms={filteredRooms.length}
         roomsPerPage={roomsPerPage}
