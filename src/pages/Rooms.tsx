@@ -30,6 +30,14 @@ const dummyRooms: Room[] = [
     guests: 1,
     description: 'Mala soba za jednu osobu',
     imageUrl: '/images/small-room.jpg',
+  },
+  {
+    id: 4,
+    name: 'Luksuzna soba',
+    price: 100,
+    guests: 4,
+    description: 'Luksuzna soba za do 4 osobe',
+    imageUrl: '/images/luxury-room.jpg',
   }
 ];
 
