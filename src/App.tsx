@@ -5,6 +5,7 @@ import RoomDetails from './pages/RoomDetails';
 import Reservation from './pages/Reservation';
 import Contact from './pages/Contact';
 import Navbar from './components/NavBar';
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/reservation" element={<Reservation />} />
         <Route path="/contact" element={<Contact />} />
       </Routes>
+      <Footer/>
     </Router>
   );
 }
