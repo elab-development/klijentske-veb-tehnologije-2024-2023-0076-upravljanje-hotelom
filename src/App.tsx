@@ -23,6 +23,7 @@ function App() {
             <Route path="/reservation" element={<Reservation />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/about" element={<About />} />
+            <Route path="/rooms/:id" element={<RoomDetails />} />
           </Routes>
         </div>
         <Footer/>
