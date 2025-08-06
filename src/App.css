@@ -1,8 +1,54 @@
 #root {
+  width: 100%;
+  padding: 0 10px;  
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+.page-container {
   max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  margin: 20px auto;
+  padding: 10px 20px;
+  text-align: left;
+  font-family: Arial, sans-serif;
+  color: #c7c7c7;
+}
+
+.page-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+
+.page-container p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.app-wrapper {
+  padding: 0 10px;
+  max-width: 1200px;
+  margin: 0 auto; 
+  box-sizing: border-box;
+  padding-top: 70px;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-content {
+  flex: 1;
 }
 
 .logo {

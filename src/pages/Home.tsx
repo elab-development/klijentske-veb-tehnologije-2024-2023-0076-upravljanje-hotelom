@@ -34,7 +34,7 @@ const Home: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div>
       {/* Hero sekcija */}
       <section
         style={{
@@ -91,7 +91,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Prednosti hotela */}
-      <section>
+      <section style={{marginBottom: 90}}>
         <h2>Naše prednosti</h2>
         <ul>
           <li>Besplatan WiFi</li>
