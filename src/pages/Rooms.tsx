@@ -12,49 +12,37 @@ const roomListStyle: React.CSSProperties = {
   marginTop: '1rem',
 };
 
-const dummyRooms: Room[] = [
-  {
-    id: 1,
-    name: 'Standard soba',
-    price: 50,
-    guests: 2,
-    description: 'Udobna standard soba za dva gosta',
-    imageUrl: '/images/standard-room.jpg',
-  },
-  {
-    id: 2,
-    name: 'Porodična soba',
-    price: 80,
-    guests: 4,
-    description: 'Prostrana soba za celu porodicu',
-    imageUrl: '/images/family-room.jpg',
-  },
-  {
-    id: 3,
-    name: 'Mala soba',
-    price: 30,
-    guests: 1,
-    description: 'Mala soba za jednu osobu',
-    imageUrl: '/images/small-room.jpg',
-  },
-  {
-    id: 4,
-    name: 'Luksuzna soba',
-    price: 100,
-    guests: 4,
-    description: 'Luksuzna soba za do 4 osobe',
-    imageUrl: '/images/luxury-room.jpg',
-  }
-];
-
 const Rooms: React.FC = () => {
-  const [rooms] = useState<Room[]>(dummyRooms);
-  const [filteredRooms, setFilteredRooms] = useState<Room[]>(dummyRooms);
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [filteredRooms, setFilteredRooms] = useState<Room[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const roomsPerPage = 5;
 
   const [guestFilter, setGuestFilter] = useState<number | ''>('');
   const [maxPriceFilter, setMaxPriceFilter] = useState<number | ''>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch rooms from API on component mount
+  useEffect(() => {
+    const fetchRooms = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch('http://localhost:5001/rooms');
+        if (!response.ok) throw new Error('Greška pri učitavanju soba');
+        const data: Room[] = await response.json();
+        setRooms(data);
+        setFilteredRooms(data);
+        setError(null);
+      } catch (err: any) {
+        setError(err.message || 'Nepoznata greška');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRooms();
+  }, []);
 
   useEffect(() => {
     let filtered = rooms;
@@ -75,6 +63,9 @@ const Rooms: React.FC = () => {
   const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
   const currentRooms = filteredRooms.slice(indexOfFirstRoom, indexOfLastRoom);
 
+  if (loading) return <p>Učitavanje soba...</p>;
+  if (error) return <p style={{ color: 'red' }}>Greška: {error}</p>;
+
   return (
     <div>
       <h1>Lista soba</h1>
@@ -84,10 +75,10 @@ const Rooms: React.FC = () => {
         setMaxPriceFilter={setMaxPriceFilter}
       />
       <div style={roomListStyle}>
-  {currentRooms.map(room => (
-    <RoomCard key={room.id} room={room} />
-  ))}
-</div>
+        {currentRooms.map(room => (
+          <RoomCard key={room.id} room={room} />
+        ))}
+      </div>
       <Pagination
         totalRooms={filteredRooms.length}
         roomsPerPage={roomsPerPage}

@@ -5,7 +5,7 @@ import type { Room } from '../models/Room';
 
 const featuredRooms: Room[] = [
   {
-    id: 1,
+    id: 4,
     name: 'Luksuzna soba',
     price: 120,
     guests: 2,
@@ -21,7 +21,7 @@ const featuredRooms: Room[] = [
     imageUrl: '/images/family-room.jpg',
   },
   {
-    id: 3,
+    id: 1,
     name: 'Standard soba',
     price: 60,
     guests: 2,
@@ -35,44 +35,21 @@ const Home: React.FC = () => {
 
   return (
     <div>
+        
       {/* Hero sekcija */}
-      <section
-        style={{
-          backgroundImage: 'url(/images/hotel-hero.jpg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          height: '400px',
-          color: 'white',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
-          borderRadius: '8px',
-          marginBottom: '2rem',
-        }}
-      >
+      <section className="hero-section">
         <h1>Dobrodošli u naš hotel!</h1>
         <p>Rezervišite sobu po najboljoj ceni i uživajte u boravku.</p>
         <button
           onClick={() => navigate('/rooms')}
-          style={{
-            padding: '10px 20px',
-            fontSize: '1.2rem',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            marginTop: '1rem',
-          }}
+          className="hero-button"
         >
           Pretraži sobe
         </button>
       </section>
-
+<div className="centered-container">
       {/* Opis hotela */}
-      <section style={{ marginBottom: '2rem' }}>
+      <section className="section-margin">
         <h2>Zašto izabrati nas?</h2>
         <p>
           Naš hotel nudi komforne sobe, izvrsnu uslugu i lokaciju blizu najvažnijih
@@ -81,9 +58,10 @@ const Home: React.FC = () => {
       </section>
 
       {/* Istaknute sobe */}
-      <section style={{ marginBottom: '2rem' }}>
+      
+      <section className="section-margin">
         <h2>Istaknute sobe</h2>
-        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+        <div className="featured-rooms">
           {featuredRooms.map(room => (
             <RoomCard key={room.id} room={room} />
           ))}
@@ -91,7 +69,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Prednosti hotela */}
-      <section style={{marginBottom: 90}}>
+      <section className="advantages-section">
         <h2>Naše prednosti</h2>
         <ul>
           <li>Besplatan WiFi</li>
@@ -101,6 +79,7 @@ const Home: React.FC = () => {
           <li>Čistoća i sigurnost</li>
         </ul>
       </section>
+      </div>
     </div>
   );
 };

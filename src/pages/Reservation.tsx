@@ -1,45 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import type { Room } from '../models/Room';
 
-const dummyRooms: Room[] = [
-  {
-    id: 1,
-    name: 'Standard soba',
-    price: 50,
-    guests: 2,
-    description: 'Udobna standard soba za dva gosta',
-    imageUrl: '/images/standard-room.jpg',
-  },
-  {
-    id: 2,
-    name: 'Porodična soba',
-    price: 80,
-    guests: 4,
-    description: 'Prostrana soba za celu porodicu',
-    imageUrl: '/images/family-room.jpg',
-  },
-  {
-    id: 3,
-    name: 'Mala soba',
-    price: 30,
-    guests: 1,
-    description: 'Mala soba za jednu osobu',
-    imageUrl: '/images/small-room.jpg',
-  },
-  {
-    id: 4,
-    name: 'Luksuzna soba',
-    price: 100,
-    guests: 4,
-    description: 'Luksuzna soba za do 4 osobe',
-    imageUrl: '/images/luxury-room.jpg',
-  }
-];
-
 const Reservation: React.FC = () => {
   const { roomId } = useParams<{ roomId: string }>();
-  const room = dummyRooms.find(r => r.id === Number(roomId));
+  const [room, setRoom] = useState<Room | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -50,22 +17,44 @@ const Reservation: React.FC = () => {
 
   const [success, setSuccess] = useState(false);
 
+  useEffect(() => {
+    const fetchRoom = async () => {
+      try {
+        const res = await fetch(`http://localhost:5001/rooms/${roomId}`);
+        if (!res.ok) {
+          throw new Error('Room not found');
+        }
+        const data = await res.json();
+        setRoom(data);
+      } catch (err) {
+        console.error('Greška prilikom učitavanja sobe:', err);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (roomId) {
+      fetchRoom();
+    }
+  }, [roomId]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!formData.name || !formData.checkIn || !formData.checkOut) {
-    return;
-  }
+    if (!formData.name || !formData.checkIn || !formData.checkOut) {
+      return;
+    }
 
-  setSuccess(true);
-};
+    setSuccess(true);
+  };
 
-
-  if (!room) return <p>Soba nije pronađena.</p>;
+  if (loading) return <p>Učitavanje...</p>;
+  if (error || !room) return <p>Soba nije pronađena.</p>;
 
   return (
     <div className="reservation-container">
@@ -119,8 +108,9 @@ const Reservation: React.FC = () => {
           />
         </label>
 
-        <button type="submit" disabled={!formData.name || !formData.checkIn || !formData.checkOut}>Potvrdi rezervaciju</button>
-
+        <button type="submit" disabled={!formData.name || !formData.checkIn || !formData.checkOut}>
+          Potvrdi rezervaciju
+        </button>
       </form>
 
       {success && <p className="reservation-success">✅ Rezervacija uspešna!</p>}
