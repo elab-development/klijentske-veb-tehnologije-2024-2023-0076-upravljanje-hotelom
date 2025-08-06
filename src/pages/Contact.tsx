@@ -1,48 +1,59 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const Contact: React.FC = () => {
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitted(true);
+
+    e.currentTarget.reset();
+
+    setTimeout(() => {
+      setSubmitted(false);
+    }, 3000);
+  };
+
   return (
     <div className="contact-container">
       <h1>Kontaktirajte nas</h1>
-      <p>Imate pitanje ili želite da rezervišete? Slobodno nas kontaktirajte.</p>
 
-      <form className="contact-form">
+      <form className="contact-form" onSubmit={handleSubmit}>
         <label>
-            Ime:
-            <input
+          Ime:
+          <input
             type="text"
             name="name"
             required
             placeholder="Unesite vaše ime"
-            />
+          />
         </label>
         <label>
-            Email:
-            <input
+          Email:
+          <input
             type="email"
             name="email"
             required
             placeholder="Unesite vašu email adresu"
-            />
+          />
         </label>
         <label>
-            Poruka:
-            <textarea
+          Poruka:
+          <textarea
             name="message"
             rows={5}
             required
             placeholder="Napišite vašu poruku ovde..."
-            ></textarea>
+          ></textarea>
         </label>
         <button type="submit">Pošalji</button>
-    </form>
+      </form>
 
-
-      <div className="contact-info">
-        <p><strong>Email:</strong> kontakt@hotel.rs</p>
-        <p><strong>Telefon:</strong> +381 11 123 456</p>
-        <p><strong>Adresa:</strong> Ulica Hotela 1, Beograd</p>
-      </div>
+      {submitted && (
+        <div className="success-message">
+          ✅ Poruka je uspešno poslata!
+        </div>
+      )}
     </div>
   );
 };
