@@ -12,7 +12,7 @@ const Footer: React.FC = () => {
 };
 
 const footerStyle: React.CSSProperties = {
-    backgroundColor: '#222',
+    backgroundColor: '#242424',
     color: '#fff',
     textAlign: 'center',
     padding: '5px',

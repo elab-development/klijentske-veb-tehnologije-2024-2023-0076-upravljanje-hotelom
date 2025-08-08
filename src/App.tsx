@@ -24,6 +24,7 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/rooms/:id" element={<RoomDetails />} />
             <Route path="/rooms/:roomId/reserve" element={<Reservation />} />
+            <Route path="*" element={<h1>404 Page not found</h1>}/>
           </Routes>
         </div>
         <Footer/>
