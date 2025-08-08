@@ -67,7 +67,8 @@ Omogućava pregled soba, rezervaciju, pregled i dodavanje recenzija.
 ## Struktura projekta
 
 hotel-booking/
-├── public/              # Statički fajlovi (slike, favicon)
+├── public/
+│   └── images/          # Slike
 ├── src/
 │   ├── components/      # Reusable React komponente (Navbar, RoomCard...)
 │   ├── pages/           # Stranice aplikacije (Home, Rooms, RoomDetails...)
