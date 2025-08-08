@@ -1,69 +1,89 @@
-# React + TypeScript + Vite
+# 🏨 Hotel Booking App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplikacija za rezervaciju hotelskih soba napravljena u **React + TypeScript** sa **JSON Server** backendom.  
+Omogućava pregled soba, rezervaciju, pregled i dodavanje recenzija.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Funkcionalnosti
 
-## Expanding the ESLint configuration
+- Pregled svih soba
+- Detaljan prikaz sobe
+- Rezervacija sobe
+- Pregled recenzija za svaku sobu
+- Dodavanje novih recenzija
+- Prikaz samo poslednje 3 recenzije (po datumu)
+- Responsive dizajn
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Tehnologije
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+- **React 18** + **TypeScript**
+- **React Router DOM** za navigaciju
+- **JSON Server** kao mock API
+- **CSS** za stilizaciju
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Instalacija i pokretanje
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. **Kloniraj repozitorijum**
+   ```bash
+   git clone https://github.com/elab-development/klijentske-veb-tehnologije-2024-2023-0076-upravljanje-hotelom.git
+   cd hotel-booking
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+2. **Instaliraj zavisnosti**
+   npm install
+
+3. **Pokreni backend**
+   npx json-server --watch db.json --port 5001
+
+4. **Pokreni frontend**
+   npm run dev
+
+5. **Otvori aplikaciju u browseru**
+   http://localhost:5173
+
+---
+
+## Navigacija kroz aplikaciju
+  🏠 Početna (/)
+    Kratki opis hotela i uvod u ponudu soba.
+  🛏 Sobe (/rooms)
+    Lista svih dostupnih soba sa osnovnim informacijama i slikama.
+  ℹ️ Detalji sobe (/rooms/:id)
+    Detaljan prikaz pojedinačne sobe, recenzije i forma za dodavanje recenzije.
+    Dugme za rezervaciju vodi na formu za unos podataka.
+  📅 Rezervacija (/rooms/:id/reserve)
+    Forma za rezervaciju sobe.
+  👥 O nama (/about)
+    Informacije o hotelu.
+  📩 Kontakt (/contact)
+    Forma za kontaktiranje hotela.
+
+---
+
+## Struktura projekta
+
+hotel-booking/
+├── public/              # Statički fajlovi (slike, favicon)
+├── src/
+│   ├── components/      # Reusable React komponente (Navbar, RoomCard...)
+│   ├── pages/           # Stranice aplikacije (Home, Rooms, RoomDetails...)
+│   ├── models/          # TypeScript interfejsi i modeli
+│   ├── App.tsx          # Root komponenta aplikacije
+│   └── main.tsx         # Ulazna tačka aplikacije
+├── db.json              # Mock baza podataka za JSON Server
+└── README.md            # Dokumentacija projekta
+
+---
+
+## API rute (JSON Server)
+
+Sobe
+  GET /rooms — lista svih soba
+  GET /rooms/:id — detalji sobe po ID-u
+Recenzije
+  GET /reviews?roomId=1 — sve recenzije za sobu sa ID 1
+  POST /reviews — dodavanje nove recenzije
