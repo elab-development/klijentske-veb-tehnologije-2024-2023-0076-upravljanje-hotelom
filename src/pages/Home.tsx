@@ -5,7 +5,7 @@ import type { Room } from '../models/Room';
 
 const featuredRooms: Room[] = [
     {
-        id: 4,
+        id: '4',
         name: 'Luksuzna soba',
         price: 120,
         guests: 2,
@@ -13,7 +13,7 @@ const featuredRooms: Room[] = [
         imageUrl: '/images/luxury-room.jpg',
     },
     {
-        id: 2,
+        id: '2',
         name: 'Porodična soba',
         price: 90,
         guests: 4,
@@ -21,7 +21,7 @@ const featuredRooms: Room[] = [
         imageUrl: '/images/family-room.jpg',
     },
     {
-        id: 1,
+        id: '1',
         name: 'Standard soba',
         price: 60,
         guests: 2,

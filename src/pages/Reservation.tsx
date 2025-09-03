@@ -1,121 +1,157 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import type { Room } from '../models/Room';
+import { apiGet, fmtPrice } from '../api';
+
+interface FormState {
+  name: string;
+  checkIn: string;
+  checkOut: string;
+  guests: number;
+  notes?: string;
+}
 
 const Reservation: React.FC = () => {
-    const { roomId } = useParams<{ roomId: string }>();
-    const [room, setRoom] = useState<Room | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
-    const [formData, setFormData] = useState({
-        name: '',
-        guests: 1,
-        checkIn: '',
-        checkOut: '',
-    });
+  const [room, setRoom] = useState<Room | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
 
-    const [success, setSuccess] = useState(false);
+  const [formData, setFormData] = useState<FormState>({
+    name: '',
+    checkIn: '',
+    checkOut: '',
+    guests: 1,
+    notes: '',
+  });
 
-    useEffect(() => {
-        const fetchRoom = async () => {
-            try {
-                const res = await fetch(`http://localhost:5001/rooms/${roomId}`);
-                if (!res.ok) {
-                    throw new Error('Room not found');
-                }
-                const data = await res.json();
-                setRoom(data);
-            } catch (err) {
-                console.error('Greška prilikom učitavanja sobe:', err);
-                setError(true);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        if (roomId) {
-            fetchRoom();
-        }
-    }, [roomId]);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+  useEffect(() => {
+    const load = async () => {
+      if (!id) {
+        setError('Nedostaje ID sobe');
+        setLoading(false);
+        return;
+      }
+      try {
+        setLoading(true);
+        const data = await apiGet<Room>(`/rooms/${id}`);
+        setRoom(data);
+      } catch (e: any) {
+        setError(e.message || 'Greška pri učitavanju sobe');
+      } finally {
+        setLoading(false);
+      }
     };
+    load();
+  }, [id]);
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: name === 'guests' ? Number(value) : value
+    }));
+  };
 
-        if (!formData.name || !formData.checkIn || !formData.checkOut) {
-            return;
-        }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const { name, checkIn, checkOut, guests } = formData;
 
-        setSuccess(true);
-    };
+    if (!name.trim() || !checkIn || !checkOut) {
+      alert('Molimo popunite sva obavezna polja.');
+      return;
+    }
 
-    if (loading) return <p>Učitavanje...</p>;
-    if (error || !room) return <p>Soba nije pronađena.</p>;
+    const start = new Date(checkIn);
+    const end = new Date(checkOut);
+    if (isNaN(start.getTime()) || isNaN(end.getTime()) || end <= start) {
+      alert('Datum odlaska mora biti posle datuma dolaska.');
+      return;
+    }
 
-    return (
-        <div className="reservation-container">
-            <h2>Rezerviši: {room.name}</h2>
-            <img src={room.imageUrl} alt={room.name} className="reservation-image" />
+    if (room && guests > room.guests) {
+      alert(`Maksimalno dozvoljeno gostiju za ovu sobu je ${room.guests}.`);
+      return;
+    }
 
-            <form onSubmit={handleSubmit} className="reservation-form">
-                <label>
-                    Ime i prezime:
-                    <input
-                        type="text"
-                        name="name"
-                        required
-                        value={formData.name}
-                        onChange={handleChange}
-                        placeholder="Vaše ime"
-                    />
-                </label>
+    
+    setSuccess(true);
 
-                <label>
-                    Broj gostiju:
-                    <input
-                        type="number"
-                        name="guests"
-                        min="1"
-                        max={room.guests}
-                        value={formData.guests}
-                        onChange={handleChange}
-                    />
-                </label>
+    setTimeout(() => navigate(`/rooms/${id}`), 1200);
+  };
 
-                <label>
-                    Datum dolaska:
-                    <input
-                        type="date"
-                        name="checkIn"
-                        required
-                        value={formData.checkIn}
-                        onChange={handleChange}
-                    />
-                </label>
+  if (loading) return <div className="reservation"><p>Učitavanje...</p></div>;
+  if (error) return <div className="reservation"><p style={{ color: 'red' }}>{error}</p></div>;
+  if (!room) return <div className="reservation"><p>Soba nije pronađena.</p></div>;
 
-                <label>
-                    Datum odlaska:
-                    <input
-                        type="date"
-                        name="checkOut"
-                        required
-                        value={formData.checkOut}
-                        onChange={handleChange}
-                    />
-                </label>
+  return (
+    <div className="reservation">
+      <button className="back-button" onClick={() => navigate(`/rooms/${id}`)}>
+        ← Nazad na detalje
+      </button>
 
-                <button type="submit" disabled={!formData.name || !formData.checkIn || !formData.checkOut}>
-                    Potvrdi rezervaciju
-                </button>
-            </form>
+      <h2>Rezervacija: {room.name}</h2>
+      <p><strong>Max gostiju:</strong> {room.guests}</p>
+      <p><strong>Cena:</strong> {fmtPrice(room.price)} / noć</p>
 
-            {success && <p className="reservation-success">✅ Rezervacija uspešna!</p>}
-        </div>
-    );
+      <form className="reservation-form" onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="name"
+          placeholder="Ime i prezime"
+          value={formData.name}
+          onChange={handleChange}
+          required
+        />
+
+        <label>
+          Datum dolaska:
+          <input
+            type="date"
+            name="checkIn"
+            value={formData.checkIn}
+            onChange={handleChange}
+            required
+          />
+        </label>
+
+        <label>
+          Datum odlaska:
+          <input
+            type="date"
+            name="checkOut"
+            value={formData.checkOut}
+            onChange={handleChange}
+            required
+          />
+        </label>
+
+        <label>
+          Broj gostiju:
+          <select name="guests" value={formData.guests} onChange={handleChange}>
+            {Array.from({ length: room.guests }, (_, i) => i + 1).map(n => (
+              <option key={n} value={n}>{n}</option>
+            ))}
+          </select>
+        </label>
+
+        <textarea
+          name="notes"
+          placeholder="Napomena (opciono)"
+          value={formData.notes}
+          onChange={handleChange}
+          rows={4}
+        />
+
+        <button type="submit">Potvrdi rezervaciju</button>
+      </form>
+
+      {success && <p style={{ color: 'limegreen', marginTop: '1rem' }}>Rezervacija uspešna!</p>}
+    </div>
+  );
 };
 
 export default Reservation;

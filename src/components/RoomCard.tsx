@@ -1,32 +1,23 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import type { Room } from '../models/Room';
-import { useNavigate } from 'react-router-dom';
+import { fmtPrice } from '../api';
 
-interface RoomCardProps {
+interface Props {
   room: Room;
 }
 
-const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
-  const navigate = useNavigate();
-
-  const handleClick = () => {
-    navigate(`/rooms/${room.id}`);
-  };
-
+const RoomCard: React.FC<Props> = ({ room }) => {
   return (
-    <div 
-      className="room-card" 
-      onClick={handleClick}
-      role="button"
-      tabIndex={0}
-      onKeyPress={(e) => { if (e.key === 'Enter') handleClick(); }}
-    >
-      <img src={room.imageUrl} alt={room.name} className="room-image" />
-      <h3>{room.name}</h3>
-      <p>{room.description}</p>
-      <p>Max gostiju: {room.guests}</p>
-      <p>Cena: ${room.price}</p>
-    </div>
+    <article className="room-card">
+      <Link to={`/rooms/${room.id}`} className="room-card-link" aria-label={`Detalji sobe ${room.name}`}>
+        <img src={room.imageUrl} alt={room.name} className="room-image" />
+        <h3>{room.name}</h3>
+        <p>{room.description}</p>
+        <p>Max gostiju: {room.guests}</p>
+        <p>Cena: {fmtPrice(room.price)}</p>
+      </Link>
+    </article>
   );
 };
 

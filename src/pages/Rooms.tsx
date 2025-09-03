@@ -1,91 +1,92 @@
-import React, { useState, useEffect } from 'react';
-import RoomCard from '../components/RoomCard';
-import Filters from '../components/Filters';
-import Pagination from '../components/Pagination';
+import React, { useEffect, useMemo, useState } from 'react';
 import type { Room } from '../models/Room';
-
-const roomListStyle: React.CSSProperties = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(4, 1fr)',
-    gap: '1.5rem',
-    marginTop: '1rem',
-};
+import { apiGet } from '../api';
+import RoomCard from '../components/RoomCard';
+import Pagination from '../components/Pagination';
+import Filters from '../components/Filters';
 
 const Rooms: React.FC = () => {
-    const [rooms, setRooms] = useState<Room[]>([]);
-    const [filteredRooms, setFilteredRooms] = useState<Room[]>([]);
-    const [currentPage, setCurrentPage] = useState<number>(1);
-    const roomsPerPage = 5;
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-    const [guestFilter, setGuestFilter] = useState<number | ''>('');
-    const [maxPriceFilter, setMaxPriceFilter] = useState<number | ''>('');
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
+  // kontrolisani filteri
+  const [guestFilter, setGuestFilter] = useState<number | ''>('');
+  const [maxPriceFilter, setMaxPriceFilter] = useState<number | ''>('');
 
-    
-    useEffect(() => {
-        const fetchRooms = async () => {
-            setLoading(true);
-            try {
-                const response = await fetch('http://localhost:5001/rooms');
-                if (!response.ok) throw new Error('Greška pri učitavanju soba');
-                const data: Room[] = await response.json();
-                setRooms(data);
-                setFilteredRooms(data);
-                setError(null);
-            } catch (err: any) {
-                setError(err.message || 'Nepoznata greška');
-            } finally {
-                setLoading(false);
-            }
-        };
+  // paginacija
+  const [currentPage, setCurrentPage] = useState(1);
+  const roomsPerPage = 8;
 
-        fetchRooms();
-    }, []);
+  useEffect(() => {
+    const load = async () => {
+      try {
+        setLoading(true);
+        const data = await apiGet<Room[]>('/rooms');
+        setRooms(data);
+      } catch (e: any) {
+        setError(e.message || 'Greška pri učitavanju soba');
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
 
-    useEffect(() => {
-        let filtered = rooms;
+  // filtriranje
+  const filtered = useMemo(() => {
+    return rooms.filter(r => {
+      if (guestFilter !== '' && r.guests < guestFilter) return false;
+      if (maxPriceFilter !== '' && r.price > maxPriceFilter) return false;
+      return true;
+    });
+  }, [rooms, guestFilter, maxPriceFilter]);
 
-        if (guestFilter !== '') {
-            filtered = filtered.filter(room => room.guests >= guestFilter);
-        }
+  // reset paginacije kad se filteri promene
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [guestFilter, maxPriceFilter]);
 
-        if (maxPriceFilter !== '') {
-            filtered = filtered.filter(room => room.price <= maxPriceFilter);
-        }
+  // slice za trenutnu stranu
+  const indexOfLast = currentPage * roomsPerPage;
+  const indexOfFirst = indexOfLast - roomsPerPage;
+  const current = filtered.slice(indexOfFirst, indexOfLast);
 
-        setFilteredRooms(filtered);
-        setCurrentPage(1);
-    }, [guestFilter, maxPriceFilter, rooms]);
+  if (loading) return <div className="room-list"><p>Učitavanje...</p></div>;
+  if (error) return <div className="room-list"><p style={{ color: 'red' }}>{error}</p></div>;
 
-    const indexOfLastRoom = currentPage * roomsPerPage;
-    const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
-    const currentRooms = filteredRooms.slice(indexOfFirstRoom, indexOfLastRoom);
+  return (
+    <div className="room-list">
+      <h2>Dostupne sobe</h2>
 
-    if (loading) return <p>Učitavanje soba...</p>;
-    if (error) return <p style={{ color: 'red' }}>Greška: {error}</p>;
+      <Filters
+        guestFilter={guestFilter}
+        maxPriceFilter={maxPriceFilter}
+        setGuestFilter={setGuestFilter}
+        setMaxPriceFilter={setMaxPriceFilter}
+        onReset={() => { setGuestFilter(''); setMaxPriceFilter(''); }}
+      />
 
-    return (
-        <div>
-            <h1>Lista soba</h1>
-            <Filters
-                rooms={rooms}
-                setGuestFilter={setGuestFilter}
-                setMaxPriceFilter={setMaxPriceFilter}
-            />
-            <div style={roomListStyle}>
-                {currentRooms.map(room => (
-                    <RoomCard key={room.id} room={room} />
-                ))}
-            </div>
-            <Pagination
-                totalRooms={filteredRooms.length}
-                roomsPerPage={roomsPerPage}
-                currentPage={currentPage}
-                setCurrentPage={setCurrentPage}
-            />
-        </div>
-    );
+      {filtered.length === 0 ? (
+        <p>Nema soba za zadate filtere.</p>
+      ) : (
+        <>
+          <div className="rooms-grid">
+            {current.map(room => (
+              <RoomCard key={room.id} room={room} />
+            ))}
+          </div>
+
+          <Pagination
+            roomsPerPage={roomsPerPage}
+            totalRooms={filtered.length}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+          />
+        </>
+      )}
+    </div>
+  );
 };
 
 export default Rooms;

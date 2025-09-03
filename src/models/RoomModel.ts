@@ -7,7 +7,7 @@ export class RoomModel {
         this.room = room;
     }
 
-    get id(): number {
+    get id(): string {
         return this.room.id;
     }
 

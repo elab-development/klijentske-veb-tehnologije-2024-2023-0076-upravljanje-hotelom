@@ -74,5 +74,25 @@
       "comment": "Mala soba, kolko para tolko muzike",
       "date": "2025-06-30"
     }
+  ],
+  "users": [
+    {
+      "id": "17fdaf64-b7f2-4db0-8c18-8d120727c9d8",
+      "name": "perea peric",
+      "email": "peric@gmail.com",
+      "password": "123456"
+    },
+    {
+      "id": "0959e197-904e-4b2e-9736-717fa7b059c2",
+      "name": "sd",
+      "email": "sd@gmail.com",
+      "password": "123456"
+    },
+    {
+      "id": "fa0b3d9b-c815-4c25-aff6-14f0407b1bc4",
+      "name": "Pera Peric",
+      "email": "pera@peric.com",
+      "password": "123456"
+    }
   ]
 }

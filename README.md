@@ -19,7 +19,7 @@ Omogućava pregled soba, rezervaciju, pregled i dodavanje recenzija.
 
 ## Tehnologije
 
-- **React 18** + **TypeScript**
+- **React 19** + **TypeScript**
 - **React Router DOM** za navigaciju
 - **JSON Server** kao mock API
 - **CSS** za stilizaciju

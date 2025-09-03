@@ -1,36 +1,55 @@
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
 import Home from './pages/Home';
 import Rooms from './pages/Rooms';
 import RoomDetails from './pages/RoomDetails';
 import Reservation from './pages/Reservation';
-import Contact from './pages/Contact';
-import Navbar from './components/NavBar';
-import Footer from './components/Footer';
-import './App.css'; 
 import About from './pages/About';
+import Contact from './pages/Contact';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Profile from './pages/Profile';
 
-function App() {
+import RequireAuth from './auth/RequireAuth';
+
+import NavBar from './components/NavBar';
+import Footer from './components/Footer';
+
+import './App.css';
+
+const App: React.FC = () => {
   return (
     <Router>
       <div className="app-wrapper">
-        <Navbar/>
-        <div className="page-content">
+        <NavBar />
+        <main id="main" className="container">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/rooms" element={<Rooms />} />
             <Route path="/rooms/:id" element={<RoomDetails />} />
-            <Route path="/reservation" element={<Reservation />} />
-            <Route path="/contact" element={<Contact />} />
+            <Route path="/rooms/:id/reserve" element={<Reservation />} />
             <Route path="/about" element={<About />} />
-            <Route path="/rooms/:id" element={<RoomDetails />} />
-            <Route path="/rooms/:roomId/reserve" element={<Reservation />} />
-            <Route path="*" element={<h1>404 Page not found</h1>}/>
+            <Route path="/contact" element={<Contact />} />
+
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route
+              path="/profile"
+              element={
+                <RequireAuth>
+                  <Profile />
+                </RequireAuth>
+              }
+            />
+
+            <Route path="*" element={<h1>404 Page not found</h1>} />
           </Routes>
-        </div>
-        <Footer/>
+        </main>
+        <Footer />
       </div>
     </Router>
   );
-}
+};
 
 export default App;
